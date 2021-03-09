@@ -32,6 +32,16 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.watchkit</string>
 	</dict>
+	<key>NSHealthShareUsageDescription</key>
+	<string>We read your health data during sessions</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>We need to save your completed sessions</string>
+	<key>UIBackgroundModes</key>
+	<array/>
+	<key>WKBackgroundModes</key>
+	<array>
+		<string>mindfulness</string>
+	</array>
 	<key>WKRunsIndependentlyOfCompanionApp</key>
 	<true/>
 </dict>

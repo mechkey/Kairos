@@ -7,11 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A358B02B25EFB93400847024 /* KairosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A358B02A25EFB93400847024 /* KairosApp.swift */; };
-		A358B02D25EFB93400847024 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A358B02C25EFB93400847024 /* ContentView.swift */; };
-		A358B02F25EFB93D00847024 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A358B02E25EFB93D00847024 /* Assets.xcassets */; };
-		A358B03225EFB93D00847024 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A358B03125EFB93D00847024 /* Preview Assets.xcassets */; };
-		A358B03725EFB93D00847024 /* Kairos WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = A358B03625EFB93D00847024 /* Kairos WatchKit App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A337735025F67C8600DFC947 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A337734F25F67C8600DFC947 /* DataManager.swift */; };
+		A337735425F67CA900DFC947 /* SessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A337735325F67CA900DFC947 /* SessionView.swift */; };
 		A358B03C25EFB94100847024 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A358B03B25EFB94100847024 /* Assets.xcassets */; };
 		A358B04325EFB94100847024 /* Kairos WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A358B04225EFB94100847024 /* Kairos WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A358B04825EFB94100847024 /* KairosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A358B04725EFB94100847024 /* KairosApp.swift */; };
@@ -21,16 +18,10 @@
 		A358B05025EFB94100847024 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A358B04F25EFB94100847024 /* ComplicationController.swift */; };
 		A358B05225EFB94500847024 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A358B05125EFB94500847024 /* Assets.xcassets */; };
 		A358B05525EFB94500847024 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A358B05425EFB94500847024 /* Preview Assets.xcassets */; };
+		A368C5AA25F2629B0068350A /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A368C5A925F2629B0068350A /* HealthKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		A358B03825EFB93D00847024 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A358B01F25EFB93400847024 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A358B03525EFB93D00847024;
-			remoteInfo = "Kairos WatchKit App";
-		};
 		A358B04425EFB94100847024 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A358B01F25EFB93400847024 /* Project object */;
@@ -52,26 +43,12 @@
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A358B06125EFB94500847024 /* Embed Watch Content */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
-			dstSubfolderSpec = 16;
-			files = (
-				A358B03725EFB93D00847024 /* Kairos WatchKit App.app in Embed Watch Content */,
-			);
-			name = "Embed Watch Content";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		A358B02725EFB93400847024 /* Kairos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kairos.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A358B02A25EFB93400847024 /* KairosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KairosApp.swift; sourceTree = "<group>"; };
-		A358B02C25EFB93400847024 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		A358B02E25EFB93D00847024 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		A358B03125EFB93D00847024 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		A358B03325EFB93D00847024 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A337734225F66BA700DFC947 /* Kairos WatchKit App-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Kairos WatchKit App-Bridging-Header.h"; sourceTree = "<group>"; };
+		A337734F25F67C8600DFC947 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		A337735325F67CA900DFC947 /* SessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionView.swift; sourceTree = "<group>"; };
 		A358B03625EFB93D00847024 /* Kairos WatchKit App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Kairos WatchKit App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A358B03B25EFB94100847024 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A358B03D25EFB94100847024 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -85,20 +62,17 @@
 		A358B05425EFB94500847024 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A358B05625EFB94500847024 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A358B05725EFB94500847024 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		A358B07A25EFC4E400847024 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.4.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
+		A368C5A825F2629B0068350A /* Kairos WatchKit Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Kairos WatchKit Extension.entitlements"; sourceTree = "<group>"; };
+		A368C5A925F2629B0068350A /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS7.2.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		A358B02425EFB93400847024 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A358B03F25EFB94100847024 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A368C5AA25F2629B0068350A /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,41 +82,20 @@
 		A358B01E25EFB93400847024 = {
 			isa = PBXGroup;
 			children = (
-				A358B02925EFB93400847024 /* Kairos */,
 				A358B03A25EFB93D00847024 /* Kairos WatchKit App */,
 				A358B04625EFB94100847024 /* Kairos WatchKit Extension */,
 				A358B02825EFB93400847024 /* Products */,
+				A358B07925EFC4E400847024 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		A358B02825EFB93400847024 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A358B02725EFB93400847024 /* Kairos.app */,
 				A358B03625EFB93D00847024 /* Kairos WatchKit App.app */,
 				A358B04225EFB94100847024 /* Kairos WatchKit Extension.appex */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		A358B02925EFB93400847024 /* Kairos */ = {
-			isa = PBXGroup;
-			children = (
-				A358B02A25EFB93400847024 /* KairosApp.swift */,
-				A358B02C25EFB93400847024 /* ContentView.swift */,
-				A358B02E25EFB93D00847024 /* Assets.xcassets */,
-				A358B03325EFB93D00847024 /* Info.plist */,
-				A358B03025EFB93D00847024 /* Preview Content */,
-			);
-			path = Kairos;
-			sourceTree = "<group>";
-		};
-		A358B03025EFB93D00847024 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				A358B03125EFB93D00847024 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		A358B03A25EFB93D00847024 /* Kairos WatchKit App */ = {
@@ -157,8 +110,11 @@
 		A358B04625EFB94100847024 /* Kairos WatchKit Extension */ = {
 			isa = PBXGroup;
 			children = (
+				A368C5A825F2629B0068350A /* Kairos WatchKit Extension.entitlements */,
 				A358B04725EFB94100847024 /* KairosApp.swift */,
 				A358B04925EFB94100847024 /* ContentView.swift */,
+				A337734F25F67C8600DFC947 /* DataManager.swift */,
+				A337735325F67CA900DFC947 /* SessionView.swift */,
 				A358B04B25EFB94100847024 /* NotificationController.swift */,
 				A358B04D25EFB94100847024 /* NotificationView.swift */,
 				A358B04F25EFB94100847024 /* ComplicationController.swift */,
@@ -166,6 +122,7 @@
 				A358B05625EFB94500847024 /* Info.plist */,
 				A358B05725EFB94500847024 /* PushNotificationPayload.apns */,
 				A358B05325EFB94500847024 /* Preview Content */,
+				A337734225F66BA700DFC947 /* Kairos WatchKit App-Bridging-Header.h */,
 			);
 			path = "Kairos WatchKit Extension";
 			sourceTree = "<group>";
@@ -178,28 +135,18 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		A358B07925EFC4E400847024 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A368C5A925F2629B0068350A /* HealthKit.framework */,
+				A358B07A25EFC4E400847024 /* HealthKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A358B02625EFB93400847024 /* Kairos */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A358B06225EFB94500847024 /* Build configuration list for PBXNativeTarget "Kairos" */;
-			buildPhases = (
-				A358B02325EFB93400847024 /* Sources */,
-				A358B02425EFB93400847024 /* Frameworks */,
-				A358B02525EFB93400847024 /* Resources */,
-				A358B06125EFB94500847024 /* Embed Watch Content */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A358B03925EFB93D00847024 /* PBXTargetDependency */,
-			);
-			name = Kairos;
-			productName = Kairos;
-			productReference = A358B02725EFB93400847024 /* Kairos.app */;
-			productType = "com.apple.product-type.application";
-		};
 		A358B03525EFB93D00847024 /* Kairos WatchKit App */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A358B05E25EFB94500847024 /* Build configuration list for PBXNativeTarget "Kairos WatchKit App" */;
@@ -243,11 +190,9 @@
 				LastSwiftUpdateCheck = 1240;
 				LastUpgradeCheck = 1240;
 				TargetAttributes = {
-					A358B02625EFB93400847024 = {
-						CreatedOnToolsVersion = 12.4;
-					};
 					A358B03525EFB93D00847024 = {
 						CreatedOnToolsVersion = 12.4;
+						LastSwiftMigration = 1240;
 					};
 					A358B04125EFB94100847024 = {
 						CreatedOnToolsVersion = 12.4;
@@ -267,7 +212,6 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A358B02625EFB93400847024 /* Kairos */,
 				A358B03525EFB93D00847024 /* Kairos WatchKit App */,
 				A358B04125EFB94100847024 /* Kairos WatchKit Extension */,
 			);
@@ -275,15 +219,6 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A358B02525EFB93400847024 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A358B03225EFB93D00847024 /* Preview Assets.xcassets in Resources */,
-				A358B02F25EFB93D00847024 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A358B03425EFB93D00847024 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -304,20 +239,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		A358B02325EFB93400847024 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A358B02D25EFB93400847024 /* ContentView.swift in Sources */,
-				A358B02B25EFB93400847024 /* KairosApp.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A358B03E25EFB94100847024 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A337735425F67CA900DFC947 /* SessionView.swift in Sources */,
 				A358B04C25EFB94100847024 /* NotificationController.swift in Sources */,
+				A337735025F67C8600DFC947 /* DataManager.swift in Sources */,
 				A358B04A25EFB94100847024 /* ContentView.swift in Sources */,
 				A358B05025EFB94100847024 /* ComplicationController.swift in Sources */,
 				A358B04825EFB94100847024 /* KairosApp.swift in Sources */,
@@ -328,11 +256,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		A358B03925EFB93D00847024 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A358B03525EFB93D00847024 /* Kairos WatchKit App */;
-			targetProxy = A358B03825EFB93D00847024 /* PBXContainerItemProxy */;
-		};
 		A358B04525EFB94100847024 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A358B04125EFB94100847024 /* Kairos WatchKit Extension */;
@@ -392,11 +315,15 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = watchos;
+				SKIP_INSTALL = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WATCHOS_DEPLOYMENT_TARGET = 7.1;
 			};
 			name = Debug;
 		};
@@ -445,10 +372,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				SDKROOT = watchos;
+				SKIP_INSTALL = NO;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				WATCHOS_DEPLOYMENT_TARGET = 7.1;
 			};
 			name = Release;
 		};
@@ -456,6 +387,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_ENTITLEMENTS = "Kairos WatchKit Extension/Kairos WatchKit Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Kairos WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = 9GZLS24G89;
@@ -472,7 +404,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 7.2;
+				WATCHOS_DEPLOYMENT_TARGET = 7.1;
 			};
 			name = Debug;
 		};
@@ -480,6 +412,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_ENTITLEMENTS = "Kairos WatchKit Extension/Kairos WatchKit Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Kairos WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = 9GZLS24G89;
@@ -497,7 +430,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 7.2;
+				WATCHOS_DEPLOYMENT_TARGET = 7.1;
 			};
 			name = Release;
 		};
@@ -507,17 +440,26 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9GZLS24G89;
 				IBSC_MODULE = Kairos_WatchKit_Extension;
 				INFOPLIST_FILE = "Kairos WatchKit App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Inc-Inc.Kairos.watchkitapp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Kairos WatchKit Extension/Kairos WatchKit App-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 7.2;
+				WATCHOS_DEPLOYMENT_TARGET = 7.1;
 			};
 			name = Debug;
 		};
@@ -527,65 +469,26 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9GZLS24G89;
 				IBSC_MODULE = Kairos_WatchKit_Extension;
 				INFOPLIST_FILE = "Kairos WatchKit App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Inc-Inc.Kairos.watchkitapp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Kairos WatchKit Extension/Kairos WatchKit App-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 7.2;
-			};
-			name = Release;
-		};
-		A358B06325EFB94500847024 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Kairos/Preview Content\"";
-				DEVELOPMENT_TEAM = 9GZLS24G89;
-				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = Kairos/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Inc-Inc.Kairos";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		A358B06425EFB94500847024 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Kairos/Preview Content\"";
-				DEVELOPMENT_TEAM = 9GZLS24G89;
-				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = Kairos/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Inc-Inc.Kairos";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 7.1;
 			};
 			name = Release;
 		};
@@ -615,15 +518,6 @@
 			buildConfigurations = (
 				A358B05F25EFB94500847024 /* Debug */,
 				A358B06025EFB94500847024 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A358B06225EFB94500847024 /* Build configuration list for PBXNativeTarget "Kairos" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A358B06325EFB94500847024 /* Debug */,
-				A358B06425EFB94500847024 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
