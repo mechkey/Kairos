@@ -4,7 +4,7 @@
 //
 //  Created by Luke on 08/03/2021.
 //
-
+import Foundation
 import SwiftUI
 
 struct SessionView: View {
@@ -24,31 +24,25 @@ struct SessionView: View {
         }
     }
 
-    var unit: String {
-        switch displayMode {
-        case .heartRate:
-            return "beats / minute"
-        }
-    }
-
     var body: some View {
         VStack {
             Group {
                 Text(quantity)
                     .font(.largeTitle)
-                Text(unit)
+                Text("beats / minute")
                     .textCase(.uppercase)
+                    
             }
 
             if dataManager.state == .active {
                 Button("Pause", action: dataManager.pause)
+                Button("End", action: dataManager.end)
             } else {
                 Button("Resume", action: dataManager.resume)
-                Button("End", action: dataManager.end)
+                
             }
         }
     }
-    
 }
 
 struct WorkoutView_Previews: PreviewProvider {

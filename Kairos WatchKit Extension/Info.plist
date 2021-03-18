@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Kairos WatchKit Extension</string>
+	<string>Kairos</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -41,6 +41,7 @@
 	<key>WKBackgroundModes</key>
 	<array>
 		<string>mindfulness</string>
+		<string>workout-processing</string>
 	</array>
 	<key>WKRunsIndependentlyOfCompanionApp</key>
 	<true/>

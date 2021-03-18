@@ -7,23 +7,36 @@
 
 import Foundation
 import HealthKit
+import WatchKit
 
-class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveWorkoutBuilderDelegate {
+class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveWorkoutBuilderDelegate, WKExtendedRuntimeSessionDelegate {
+//class DataManager: WKInterfaceController, ObservableObject, HKWorkoutSessionDelegate, HKLiveWorkoutBuilderDelegate, WKExtendedRuntimeSessionDelegate {
+    
+    override init() {
+        self.healthStore = HKHealthStore()
+    }
+
     enum WorkoutState {
         case inactive, active, paused
     }
-
-    var healthStore = HKHealthStore()
+    
+    var healthStore: HKHealthStore
     var workoutSession: HKWorkoutSession?
     var workoutBuilder: HKLiveWorkoutBuilder?
-
-    var activity = HKWorkoutActivityType.cycling
+    
+    var session: WKExtendedRuntimeSession!
+    
+    var activity = HKWorkoutActivityType.walking
+    var sessionStart: Date = Date()
+    var heartRateValues = [Double]()
+    let heartRateUnit = HKUnit.count().unitDivided(by: .minute())
 
     @Published var state = WorkoutState.inactive
     @Published var lastHeartRate = 0.0
 
     func start() {
         let sampleTypes: Set<HKSampleType> = [
+            // sampletype bad practice? medium.com/@Cordavi/lets-talk-about-healthkit-part-1-24e57c80903c
             .workoutType(),
             .quantityType(forIdentifier: .heartRate)!,
 
@@ -31,23 +44,78 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
 
         healthStore.requestAuthorization(toShare: sampleTypes, read: sampleTypes) { success, error in
             if success {
+                //self.beginSession()
                 self.beginWorkout()
             }
         }
     }
 
+    private func beginSession() {
+        session = WKExtendedRuntimeSession()
+        session.delegate = self
+        session.start()
+        print("Session started")
+        guard let sampleType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRate) else {
+            fatalError("This method should never fail")
+        }
+        let calendar = NSCalendar.current
+        let now = Date()
+        //let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: now)
+        guard let startDate = calendar.date(byAdding: .hour, value: -1, to: now) else {
+            fatalError("*** Unable to create start date ***")
+        }
+        let range = HKQuery.predicateForSamples(withStart: startDate, end: now, options: [])
+        let sortByDate = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)
+
+        let query = HKSampleQuery(sampleType: sampleType, predicate: range, limit: Int(HKObjectQueryNoLimit), sortDescriptors: [sortByDate]) { query, results, error in
+        
+
+            guard let samples = results as? [HKQuantitySample] else {
+                //Handle errors
+                return
+            }
+            
+            for sample in samples {
+                print(sample)// Process sample
+                DispatchQueue.main.async {
+                    //Update UI
+                    let heartRateUnit = HKUnit.count().unitDivided(by: .minute())
+                    self.lastHeartRate = sample.quantity.doubleValue(for: heartRateUnit)
+                    
+                }
+            }
+            
+            //The results come back on an anonomyous backgorund queueu
+            //Dispatch to the main queue fbefore modifing the ui
+            DispatchQueue.main.async {
+                //Update UI
+                //self.heartRate = sample.quantity.doubleValue(for: beatsPerMinute)
+                
+            }
+        }
+        healthStore.execute(query)
+        //beginWorkout()
+    }
+
+    func stopSession() {
+        session.invalidate()
+    }
+    
     private func beginWorkout() {
+        healthStore = HKHealthStore()
         let config = HKWorkoutConfiguration()
         config.activityType = activity
-        config.locationType = .outdoor
+        config.locationType = .indoor
 
         do {
             workoutSession = try HKWorkoutSession(healthStore: healthStore, configuration: config)
             workoutBuilder = workoutSession?.associatedWorkoutBuilder()
+            //workoutBuilder?.shouldCollectWorkoutEvents = false
             workoutBuilder?.dataSource = HKLiveWorkoutDataSource(healthStore: healthStore, workoutConfiguration: config)
 
             workoutSession?.delegate = self
             workoutBuilder?.delegate = self
+            
 
             workoutSession?.startActivity(with: Date())
             workoutBuilder?.beginCollection(withStart: Date()) { success, error in
@@ -64,6 +132,18 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
         }
     }
 
+    func extendedRuntimeSession(_ extendedRuntimeSession: WKExtendedRuntimeSession, didInvalidateWith reason: WKExtendedRuntimeSessionInvalidationReason, error: Error?) {
+        // Indicates that the session has encountered an error or stopped running
+    }
+    
+    func extendedRuntimeSessionDidStart(_ extendedRuntimeSession: WKExtendedRuntimeSession) {
+        sessionStart = Date()
+    }
+    
+    func extendedRuntimeSessionWillExpire(_ extendedRuntimeSession: WKExtendedRuntimeSession) {
+        // Track when your session ends. Also handle errors here.
+    }
+    
     func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) {
         DispatchQueue.main.async {
             switch toState {
@@ -88,19 +168,18 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
 
     func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
         for type in collectedTypes {
-            guard let quantityType = type as? HKQuantityType else { continue }
+            guard let quantityType = type as? HKQuantityType else { return }
             guard let statistics = workoutBuilder.statistics(for: quantityType) else { continue }
+            
 
             DispatchQueue.main.async {
-                switch statistics.quantityType {
-                case HKQuantityType.quantityType(forIdentifier: .heartRate):
-                    let heartRateUnit = HKUnit.count().unitDivided(by: .minute())
-                    self.lastHeartRate = statistics.mostRecentQuantity()?.doubleValue(for: heartRateUnit) ?? 0
-                default:
-                    let heartRateUnit = HKUnit.count().unitDivided(by: .minute())
-                    self.lastHeartRate = statistics.mostRecentQuantity()?.doubleValue(for: heartRateUnit) ?? 0
-                }
+                
+                self.lastHeartRate = statistics.mostRecentQuantity()?.doubleValue(for: self.heartRateUnit) ?? 0
             }
+            if lastHeartRate != 0.0 {
+                heartRateValues.append(lastHeartRate)
+            }
+            print(heartRateValues)
         }
     }
 
@@ -119,14 +198,73 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
     func end() {
         workoutSession?.end()
     }
-
+    /*
     private func save() {
         workoutBuilder?.endCollection(withEnd: Date()) { success, error in
             self.workoutBuilder?.finishWorkout { workout, error in
                 DispatchQueue.main.async {
                     self.state = .inactive
+                    self.fetchAndDelete()
                 }
             }
         }
     }
+    
+    private func fetchAndDelete() {
+        let sampleType = HKSampleType.quantityType(forIdentifier: .heartRate)
+        let query = HKSampleQuery.init(sampleType: sampleType!,
+                                       predicate: nil,
+                                       limit: HKObjectQueryNoLimit,
+                                       sortDescriptors: nil) { (query, results, error) in
+            let objectToDelete = results?.last
+            print("Object to delete:")
+            print(objectToDelete?.description as Any)
+            self.healthStore.delete(objectToDelete!) { (success, error) in
+                if !success {
+                    print("Error deleteing")
+                } else {
+                    print("Successfully deleted!")
+                }
+            }
+        }
+        self.healthStore.execute(query)
+    }
+    
+    private func fetch2 () {
+        
+    }*/
+    //https://www.devfright.com/a-quick-look-at-hkhealthstore/
+    func save() {
+        let quantityType = HKObjectType.quantityType(forIdentifier: .heartRate)
+        let beatsPerMin = HKQuantitySample.init(type: quantityType!, quantity: HKQuantity.init(unit: heartRateUnit, doubleValue: lastHeartRate), start: Date(), end: Date())
+        healthStore.save(beatsPerMin) { (success, error) in
+            if !success {
+                print("error")
+            } else {
+                print("Succesfully saved")
+                self.fetchAndDelete()
+            }
+        }
+    }
+    
+    func fetchAndDelete() {
+        let sampleType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRate)
+        let query = HKSampleQuery.init(sampleType: sampleType!,
+                                       predicate: nil,
+                                       limit: HKObjectQueryNoLimit,
+                                       sortDescriptors: nil) { (query, results, error) in
+                                        let objectToDelete = results?.last
+                                        print(objectToDelete!.description)
+                                        self.healthStore.delete(objectToDelete!, withCompletion: { (success, error) in
+                                            if !success {
+                                                print("error")
+                                            } else {
+                                                print("Succesfully Deleted")
+                                            }
+                                        })
+        }
+        healthStore.execute(query)
+        //https://www.devfright.com/a-quick-look-at-hkhealthstore/
+    }
 }
+
