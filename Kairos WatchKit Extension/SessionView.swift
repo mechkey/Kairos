@@ -29,6 +29,7 @@ struct SessionView: View {
             Group {
                 Text(quantity)
                     .font(.largeTitle)
+                //Text(dataManager.restingHeartRate ?? "0")
                 Text("beats / minute")
                     .textCase(.uppercase)
                     

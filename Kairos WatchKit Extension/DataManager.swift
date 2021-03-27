@@ -14,6 +14,7 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
     
     override init() {
         self.healthStore = HKHealthStore()
+        self.restingHeartRate = nil
     }
 
     enum WorkoutState {
@@ -30,6 +31,9 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
     var sessionStart: Date = Date()
     var heartRateValues = [Double]()
     let heartRateUnit = HKUnit.count().unitDivided(by: .minute())
+    
+    let restingHeartRate: HKQuantityTypeIdentifier?
+    
 
     @Published var state = WorkoutState.inactive
     @Published var lastHeartRate = 0.0
@@ -41,7 +45,7 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
             .quantityType(forIdentifier: .heartRate)!,
 
         ]
-
+        print(restingHeartRate)
         healthStore.requestAuthorization(toShare: sampleTypes, read: sampleTypes) { success, error in
             if success {
                 //self.beginSession()
@@ -155,7 +159,8 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
 
             case .ended:
                 self.save()
-
+                self.session = nil
+ 
             default:
                 break
             } 
@@ -198,73 +203,62 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
     func end() {
         workoutSession?.end()
     }
-    /*
-    private func save() {
-        workoutBuilder?.endCollection(withEnd: Date()) { success, error in
+    
+    //https://www.devfright.com/a-quick-look-at-hkhealthstore/
+    func save() {
+        self.workoutBuilder?.endCollection(withEnd: Date()) { success, error in
             self.workoutBuilder?.finishWorkout { workout, error in
                 DispatchQueue.main.async {
                     self.state = .inactive
+                    //
                     self.fetchAndDelete()
+                    //
                 }
+                
+                let quantityType = HKObjectType.quantityType(forIdentifier: .heartRate)
+                let beatsPerMin = HKQuantitySample.init(type: quantityType!, quantity: HKQuantity.init(unit: self.heartRateUnit, doubleValue: self.lastHeartRate), start: Date(), end: Date())
+                self.healthStore.save(beatsPerMin) { (success, error) in
+                    if !success {
+                        print("error: \(String(describing: error))")
+                    } else {
+                        print("Succesfully saved")
+                        self.fetchAndDelete()
+                    }
+                }
+                
+                
             }
         }
     }
     
-    private func fetchAndDelete() {
-        let sampleType = HKSampleType.quantityType(forIdentifier: .heartRate)
-        let query = HKSampleQuery.init(sampleType: sampleType!,
-                                       predicate: nil,
-                                       limit: HKObjectQueryNoLimit,
-                                       sortDescriptors: nil) { (query, results, error) in
-            let objectToDelete = results?.last
-            print("Object to delete:")
-            print(objectToDelete?.description as Any)
-            self.healthStore.delete(objectToDelete!) { (success, error) in
-                if !success {
-                    print("Error deleteing")
-                } else {
-                    print("Successfully deleted!")
-                }
-            }
-        }
-        self.healthStore.execute(query)
-    }
-    
-    private func fetch2 () {
-        
-    }*/
     //https://www.devfright.com/a-quick-look-at-hkhealthstore/
-    func save() {
-        let quantityType = HKObjectType.quantityType(forIdentifier: .heartRate)
-        let beatsPerMin = HKQuantitySample.init(type: quantityType!, quantity: HKQuantity.init(unit: heartRateUnit, doubleValue: lastHeartRate), start: Date(), end: Date())
-        healthStore.save(beatsPerMin) { (success, error) in
-            if !success {
-                print("error")
-            } else {
-                print("Succesfully saved")
-                self.fetchAndDelete()
-            }
-        }
-    }
-    
     func fetchAndDelete() {
         let sampleType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRate)
+        print("set sampletype")
+        print(healthStore.earliestPermittedSampleDate())
         let query = HKSampleQuery.init(sampleType: sampleType!,
                                        predicate: nil,
                                        limit: HKObjectQueryNoLimit,
                                        sortDescriptors: nil) { (query, results, error) in
-                                        let objectToDelete = results?.last
-                                        print(objectToDelete!.description)
-                                        self.healthStore.delete(objectToDelete!, withCompletion: { (success, error) in
-                                            if !success {
-                                                print("error")
-                                            } else {
-                                                print("Succesfully Deleted")
+                                            for result in results! {
+                                                print(result)
+                                                let objectToDelete = result
+                                                //let objectToDelete = results?.last
+                                                //print("object to delete:")
+                                                print(objectToDelete.description)
+                                                self.healthStore.delete(objectToDelete) { (success, error) in
+                                                //self.healthStore.delete(results!) { (success, error) in
+                                                    if !success {
+                                                        print("error: \(String(describing: error))")
+                                                    } else {
+                                                        print("Succesfully Deleted")
+                                                    }
+                                                }
                                             }
-                                        })
-        }
+                                        }
         healthStore.execute(query)
-        //https://www.devfright.com/a-quick-look-at-hkhealthstore/
     }
+        
+    
 }
 
