@@ -22,15 +22,17 @@ struct ContentView: View {
     var body: some View {
         if dataManager.state == .inactive {
             VStack {
-                Button("Start Workout") {
+                //Text("❤️")
+                Button("Start Session") {
                     guard HKHealthStore.isHealthDataAvailable() else { return }
                     WKInterfaceDevice.current().play(.notification)
+                    WKInterfaceDevice.current().play(.click)
                     dataManager.activity = .other
                     dataManager.start()
                 }
-                Button("Delete") {
-                    dataManager.fetchAndDelete()
-                }
+                /*Button("Get RHR") {
+                    print(dataManager.getRestingHeartRate())
+                }*/
             }
         } else {
             SessionView(dataManager: dataManager)

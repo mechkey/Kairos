@@ -8,19 +8,22 @@
 import Foundation
 import HealthKit
 import WatchKit
+import SwiftUI
 
 class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveWorkoutBuilderDelegate, WKExtendedRuntimeSessionDelegate {
 //class DataManager: WKInterfaceController, ObservableObject, HKWorkoutSessionDelegate, HKLiveWorkoutBuilderDelegate, WKExtendedRuntimeSessionDelegate {
     
     override init() {
+        self.heartRateValueAverage = 0
         self.healthStore = HKHealthStore()
-        self.restingHeartRate = nil
+        self.restingHeartRate = 0
     }
 
     enum WorkoutState {
-        case inactive, active, paused
+        case inactive, active, paused, unfocussed
     }
     
+    var RHRMultiplier = 1
     var healthStore: HKHealthStore
     var workoutSession: HKWorkoutSession?
     var workoutBuilder: HKLiveWorkoutBuilder?
@@ -30,24 +33,32 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
     var activity = HKWorkoutActivityType.walking
     var sessionStart: Date = Date()
     var heartRateValues = [Double]()
+    var heartRateValueAverage: Double
     let heartRateUnit = HKUnit.count().unitDivided(by: .minute())
     
-    let restingHeartRate: HKQuantityTypeIdentifier?
+    var restingHeartRate: Double
     
+    let heartRateSample = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRate)
 
     @Published var state = WorkoutState.inactive
     @Published var lastHeartRate = 0.0
 
     func start() {
-        let sampleTypes: Set<HKSampleType> = [
+        let writeSampleTypes: Set<HKSampleType> = [
             // sampletype bad practice? medium.com/@Cordavi/lets-talk-about-healthkit-part-1-24e57c80903c
             .workoutType(),
             .quantityType(forIdentifier: .heartRate)!,
-
+        ]
+        let readSampleTypes: Set<HKSampleType> = [
+            // sampletype bad practice? medium.com/@Cordavi/lets-talk-about-healthkit-part-1-24e57c80903c
+            .workoutType(),
+            .quantityType(forIdentifier: .heartRate)!,
+            .quantityType(forIdentifier: .appleExerciseTime)!,
         ]
         print(restingHeartRate)
-        healthStore.requestAuthorization(toShare: sampleTypes, read: sampleTypes) { success, error in
+        healthStore.requestAuthorization(toShare: writeSampleTypes, read: readSampleTypes) { success, error in
             if success {
+                
                 //self.beginSession()
                 self.beginWorkout()
             }
@@ -83,8 +94,7 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
                 print(sample)// Process sample
                 DispatchQueue.main.async {
                     //Update UI
-                    let heartRateUnit = HKUnit.count().unitDivided(by: .minute())
-                    self.lastHeartRate = sample.quantity.doubleValue(for: heartRateUnit)
+                    self.lastHeartRate = sample.quantity.doubleValue(for: self.heartRateUnit)
                     
                 }
             }
@@ -99,10 +109,6 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
         }
         healthStore.execute(query)
         //beginWorkout()
-    }
-
-    func stopSession() {
-        session.invalidate()
     }
     
     private func beginWorkout() {
@@ -122,30 +128,18 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
             
 
             workoutSession?.startActivity(with: Date())
-            workoutBuilder?.beginCollection(withStart: Date()) { success, error in
+            workoutBuilder?.beginCollection(withStart: Date()) { [self] success, error in
                 guard success else {
                     return
                 }
 
                 DispatchQueue.main.async {
-                    self.state = .active
+                    state = .active
                 }
             }
         } catch {
             // Handle errors here
         }
-    }
-
-    func extendedRuntimeSession(_ extendedRuntimeSession: WKExtendedRuntimeSession, didInvalidateWith reason: WKExtendedRuntimeSessionInvalidationReason, error: Error?) {
-        // Indicates that the session has encountered an error or stopped running
-    }
-    
-    func extendedRuntimeSessionDidStart(_ extendedRuntimeSession: WKExtendedRuntimeSession) {
-        sessionStart = Date()
-    }
-    
-    func extendedRuntimeSessionWillExpire(_ extendedRuntimeSession: WKExtendedRuntimeSession) {
-        // Track when your session ends. Also handle errors here.
     }
     
     func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) {
@@ -167,9 +161,7 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
         }
     }
 
-    func workoutSession(_ workoutSession: HKWorkoutSession, didFailWithError error: Error) {
 
-    }
 
     func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
         for type in collectedTypes {
@@ -183,35 +175,32 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
             }
             if lastHeartRate != 0.0 {
                 heartRateValues.append(lastHeartRate)
+                heartRateValueAverage = Double(heartRateValues.reduce(0, +)) / Double(heartRateValues.count)
+                print(heartRateValueAverage)
+                
             }
-            print(heartRateValues)
+            
+            print("AVG:" + String(format: "%f", heartRateValueAverage))
+            print("\(RHRMultiplier)*RHR:" + String(format: "%f", getRestingHeartRate()*1.2))
+            
+            
+            //print(heartRateValues)
         }
     }
 
-    func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) {
 
-    }
-
-    func pause() {
-        workoutSession?.pause()
-    }
-
-    func resume() {
-        workoutSession?.resume()
-    }
-
-    func end() {
-        workoutSession?.end()
-    }
     
     //https://www.devfright.com/a-quick-look-at-hkhealthstore/
     func save() {
         self.workoutBuilder?.endCollection(withEnd: Date()) { success, error in
             self.workoutBuilder?.finishWorkout { workout, error in
-                DispatchQueue.main.async {
-                    self.state = .inactive
+                DispatchQueue.main.async { [self] in
+                    state = .inactive
+                    restingHeartRate = 0
+                    heartRateValues.removeAll()
+                    
                     //
-                    self.fetchAndDelete()
+                    //self.fetchAndDelete()
                     //
                 }
                 
@@ -222,7 +211,7 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
                         print("error: \(String(describing: error))")
                     } else {
                         print("Succesfully saved")
-                        self.fetchAndDelete()
+                        //self.fetchAndDelete()
                     }
                 }
                 
@@ -231,12 +220,12 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
         }
     }
     
+    
+    
     //https://www.devfright.com/a-quick-look-at-hkhealthstore/
     func fetchAndDelete() {
-        let sampleType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRate)
-        print("set sampletype")
         print(healthStore.earliestPermittedSampleDate())
-        let query = HKSampleQuery.init(sampleType: sampleType!,
+        let query = HKSampleQuery.init(sampleType: heartRateSample!,
                                        predicate: nil,
                                        limit: HKObjectQueryNoLimit,
                                        sortDescriptors: nil) { (query, results, error) in
@@ -258,7 +247,69 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
                                         }
         healthStore.execute(query)
     }
-        
     
+    func getRestingHeartRate() -> Double {
+        let restingPredicate = HKQuery.predicateForObjects(withMetadataKey: HKMetadataKeyHeartRateMotionContext, allowedValues: ["1 "])
+        //https://stackoverflow.com/questions/56234076/how-to-filter-active-heartrate-from-healthkit-ios-using-predicate
+        let mostRecent = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
+        //https://stackoverflow.com/questions/45046974/how-to-get-the-most-recent-weight-entry-from-healthkit-data
+        let getRestingHR = HKSampleQuery.init(sampleType: heartRateSample!,
+                                       predicate: restingPredicate,
+                                       limit: 4,
+                                       sortDescriptors: [mostRecent]) { (query, results, error) in
+                                            if let samples = results as? [HKQuantitySample] {
+                                                var sum = 0.0
+                                                for sample in samples {
+                                                    sum += sample.quantity.doubleValue(for: self.heartRateUnit)
+                                                }
+                                                sum /= Double(samples.count)
+                                                self.restingHeartRate = sum
+                                                //self.restingHeartRate = samples[0].quantity.doubleValue(for: self.heartRateUnit)
+                                            }
+                                        }
+    healthStore.execute(getRestingHR)
+    return self.restingHeartRate
+    }
+    
+
+    
+    func stopSession() {
+        session.invalidate()
+    }
+    
+    func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) {
+
+    }
+
+    func pause() {
+        workoutSession?.pause()
+    }
+
+    func resume() {
+        workoutSession?.resume()
+    }
+
+    func end() {
+        workoutSession?.end()
+    }
+    
+    
+    func extendedRuntimeSession(_ extendedRuntimeSession: WKExtendedRuntimeSession, didInvalidateWith reason: WKExtendedRuntimeSessionInvalidationReason, error: Error?) {
+        // Indicates that the session has encountered an error or stopped running
+    }
+    
+    func extendedRuntimeSessionDidStart(_ extendedRuntimeSession: WKExtendedRuntimeSession) {
+        sessionStart = Date()
+    }
+    
+    func extendedRuntimeSessionWillExpire(_ extendedRuntimeSession: WKExtendedRuntimeSession) {
+        // Track when your session ends. Also handle errors here.
+    }
+    
+    func workoutSession(_ workoutSession: HKWorkoutSession, didFailWithError error: Error) {
+        
+    }
+  
 }
+
 

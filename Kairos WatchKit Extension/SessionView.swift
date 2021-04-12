@@ -15,7 +15,7 @@ struct SessionView: View {
     @State private var displayMode = DisplayMode.heartRate
     
     @ObservedObject var dataManager: DataManager
-
+    
     var quantity: String {
         switch displayMode {
 
@@ -23,28 +23,35 @@ struct SessionView: View {
             return String(Int(dataManager.lastHeartRate))
         }
     }
+    
+    var RHRMultiplier = 1
 
     var body: some View {
         VStack {
-            Group {
-                Text(quantity)
-                    .font(.largeTitle)
-                //Text(dataManager.restingHeartRate ?? "0")
-                Text("beats / minute")
-                    .textCase(.uppercase)
-                    
-            }
-
-            if dataManager.state == .active {
-                Button("Pause", action: dataManager.pause)
+            //Text("AVG:" + String(format: "%f", dataManager.heartRateValueAverage))
+            //Text("1.2*RHR:" + String(format: "%f", dataManager.getRestingHeartRate()*1.2))
+            /*if dataManager.heartRateValueAverage < dataManager.restingHeartRate * RHRMultiplier && dataManager.heartRateValueAverage != 0.0 {
+                Text("Visualise your goal")
                 Button("End", action: dataManager.end)
-            } else {
-                Button("Resume", action: dataManager.resume)
+            }*/
+            if dataManager.state == .active {
                 
+                //Button("Pause", action: dataManager.pause)
+                if dataManager.heartRateValueAverage < dataManager.restingHeartRate * Double(RHRMultiplier) && dataManager.heartRateValueAverage != 0.0  {
+                    Text("Visualise your goal")
+                    //WKInterfaceDevice.current().play(.notification)
+                } else {
+                    Text("You can do this!")
+                }
+                Button("End", action: dataManager.end)
+                
+            } else {
+                //Button("Resume", action: dataManager.resume)
             }
         }
     }
 }
+
 
 struct WorkoutView_Previews: PreviewProvider {
     static var previews: some View {
