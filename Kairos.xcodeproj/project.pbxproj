@@ -19,6 +19,8 @@
 		A358B05225EFB94500847024 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A358B05125EFB94500847024 /* Assets.xcassets */; };
 		A358B05525EFB94500847024 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A358B05425EFB94500847024 /* Preview Assets.xcassets */; };
 		A368C5AA25F2629B0068350A /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A368C5A925F2629B0068350A /* HealthKit.framework */; };
+		A3F96847260FE32900841CC3 /* ProfileDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F96846260FE32900841CC3 /* ProfileDataStore.swift */; };
+		A3F9684A260FE53600841CC3 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A3F96848260FE53600841CC3 /* Model.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +67,8 @@
 		A358B07A25EFC4E400847024 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.4.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
 		A368C5A825F2629B0068350A /* Kairos WatchKit Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Kairos WatchKit Extension.entitlements"; sourceTree = "<group>"; };
 		A368C5A925F2629B0068350A /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS7.2.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
+		A3F96846260FE32900841CC3 /* ProfileDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDataStore.swift; sourceTree = "<group>"; };
+		A3F96849260FE53600841CC3 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +118,8 @@
 				A358B04725EFB94100847024 /* KairosApp.swift */,
 				A358B04925EFB94100847024 /* ContentView.swift */,
 				A337734F25F67C8600DFC947 /* DataManager.swift */,
+				A3F96846260FE32900841CC3 /* ProfileDataStore.swift */,
+				A3F96848260FE53600841CC3 /* Model.xcdatamodeld */,
 				A337735325F67CA900DFC947 /* SessionView.swift */,
 				A358B04B25EFB94100847024 /* NotificationController.swift */,
 				A358B04D25EFB94100847024 /* NotificationView.swift */,
@@ -244,9 +250,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				A337735425F67CA900DFC947 /* SessionView.swift in Sources */,
+				A3F96847260FE32900841CC3 /* ProfileDataStore.swift in Sources */,
 				A358B04C25EFB94100847024 /* NotificationController.swift in Sources */,
 				A337735025F67C8600DFC947 /* DataManager.swift in Sources */,
 				A358B04A25EFB94100847024 /* ContentView.swift in Sources */,
+				A3F9684A260FE53600841CC3 /* Model.xcdatamodeld in Sources */,
 				A358B05025EFB94100847024 /* ComplicationController.swift in Sources */,
 				A358B04825EFB94100847024 /* KairosApp.swift in Sources */,
 				A358B04E25EFB94100847024 /* NotificationView.swift in Sources */,
@@ -523,6 +531,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		A3F96848260FE53600841CC3 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				A3F96849260FE53600841CC3 /* Model.xcdatamodel */,
+			);
+			currentVersion = A3F96849260FE53600841CC3 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = A358B01F25EFB93400847024 /* Project object */;
 }
