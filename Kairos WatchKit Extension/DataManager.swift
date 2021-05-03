@@ -23,7 +23,11 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
         case inactive, active, paused, unfocussed
     }
     
-    var RHRMultiplier = 1
+    func notify() {
+        WKInterfaceDevice.current().play(.failure)
+    }
+    
+    var RHRMultiplier = 1.15
     var healthStore: HKHealthStore
     var workoutSession: HKWorkoutSession?
     var workoutBuilder: HKLiveWorkoutBuilder?
@@ -70,6 +74,9 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
         session.delegate = self
         session.start()
         print("Session started")
+        if heartRateValueAverage < restingHeartRate * Double(RHRMultiplier) && heartRateValueAverage != 0.0 {
+            notify()
+        }
         guard let sampleType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRate) else {
             fatalError("This method should never fail")
         }
@@ -270,6 +277,8 @@ class DataManager: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveW
     healthStore.execute(getRestingHR)
     return self.restingHeartRate
     }
+    
+    
     
 
     

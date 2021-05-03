@@ -24,8 +24,11 @@ struct SessionView: View {
         }
     }
     
-    var RHRMultiplier = 1
+    var RHRMultiplier = 1.15
 
+    var notify = false
+    
+    
     var body: some View {
         VStack {
             //Text("AVG:" + String(format: "%f", dataManager.heartRateValueAverage))
@@ -38,6 +41,7 @@ struct SessionView: View {
                 
                 //Button("Pause", action: dataManager.pause)
                 if dataManager.heartRateValueAverage < dataManager.restingHeartRate * Double(RHRMultiplier) && dataManager.heartRateValueAverage != 0.0  {
+                    
                     Text("Visualise your goal")
                     //WKInterfaceDevice.current().play(.notification)
                 } else {
@@ -58,3 +62,4 @@ struct WorkoutView_Previews: PreviewProvider {
         SessionView(dataManager: DataManager())
     }
 }
+
